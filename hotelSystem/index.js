@@ -40,27 +40,47 @@ const server = http.createServer((req, res) => {
     } else if (req.method === 'POST') {
         let body = '';
         req.on('data', chunk => {
-            body += chunk.toString();
+            body += chunk.toString(); // Append chunks to body
         });
 
         req.on('end', () => {
-            const parsedData = new URLSearchParams(body);
-            const { name, email, phone, roomType, checkIn, checkOut } = parsedData;
+            // Log the raw body to verify the received data
+            console.log('Raw body:', body);
 
-            // Check room availability
+            // Parse the form data from the raw body
+            const parsedData = new URLSearchParams(body);
+
+            // Ensure that the form fields are correctly parsed
+            console.log('Parsed Data:', parsedData);
+
+            // Extract fields from parsed data
+            const name = parsedData.get('name');
+            const email = parsedData.get('email');
+            const phone = parsedData.get('phone');
+            const roomType = parsedData.get('roomType');
+            const checkIn = parsedData.get('checkIn');
+            const checkOut = parsedData.get('checkOut');
+
+            console.log('Received booking request:', { name, email, phone, roomType, checkIn, checkOut });
+
+            // Check room availability with parameterized query
             const connection = connectToDatabase();
             const checkRoomAvailabilityQuery = `
                 SELECT * FROM rooms 
                 WHERE room_type = ? 
                   AND status = 'available' 
                   AND NOT EXISTS (
-                      SELECT 1 FROM bookings 
+                      SELECT 1 
+                      FROM bookings 
                       WHERE room_id = rooms.id 
-                        AND (check_in_date BETWEEN ? AND ? OR check_out_date BETWEEN ? AND ?)
+                      AND (
+                          (check_in_date <= ? AND check_out_date >= ?)
+                      )
                   )
             `;
 
-            connection.query(checkRoomAvailabilityQuery, [roomType, checkIn, checkOut, checkIn, checkOut], (err, results) => {
+            // Execute the query with the actual values
+            connection.query(checkRoomAvailabilityQuery, [roomType, checkIn, checkIn, checkOut, checkOut], (err, results) => {
                 if (err) {
                     console.error('Error checking room availability:', err);
                     res.writeHead(500, { 'Content-Type': 'text/plain' });
