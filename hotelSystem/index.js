@@ -6,35 +6,102 @@ const server = http.createServer((req, res) => {
     if (req.method === 'GET') {
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(`
-            <html>
-                <body>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Hotel Booking System</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f9;
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                    }
+                    .container {
+                        background: #ffffff;
+                        padding: 20px 30px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        max-width: 400px;
+                        width: 100%;
+                    }
+                    h1 {
+                        text-align: center;
+                        color: #333;
+                        margin-bottom: 20px;
+                    }
+                    label {
+                        font-weight: bold;
+                        color: #555;
+                        display: block;
+                        margin-bottom: 5px;
+                    }
+                    input, select, button {
+                        width: 100%;
+                        padding: 10px;
+                        margin-bottom: 15px;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        font-size: 14px;
+                    }
+                    button {
+                        background-color: #007bff;
+                        color: white;
+                        border: none;
+                        cursor: pointer;
+                        font-weight: bold;
+                    }
+                    button:hover {
+                        background-color: #0056b3;
+                    }
+                    .footer {
+                        text-align: center;
+                        margin-top: 10px;
+                        font-size: 12px;
+                        color: #777;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Hotel Booking</h1>
                     <form method="POST" action="/">
-                        <label for="name">Name:</label><br>
-                        <input type="text" id="name" name="name" required><br><br>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
                         
-                        <label for="email">Email:</label><br>
-                        <input type="email" id="email" name="email" required><br><br>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
                         
-                        <label for="phone">Phone:</label><br>
-                        <input type="tel" id="phone" name="phone" required><br><br>
+                        <label for="phone">Phone:</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
                         
-                        <label for="roomType">Room Type:</label><br>
+                        <label for="roomType">Room Type:</label>
                         <select id="roomType" name="roomType" required>
                             <option value="single">Single</option>
                             <option value="double">Double</option>
                             <option value="suite">Suite</option>
                             <option value="penthouse">Deluxe</option>
-                        </select><br><br>
+                        </select>
                         
-                        <label for="checkIn">Check-in Date:</label><br>
-                        <input type="date" id="checkIn" name="checkIn" required><br><br>
+                        <label for="checkIn">Check-in Date:</label>
+                        <input type="date" id="checkIn" name="checkIn" required>
                         
-                        <label for="checkOut">Check-out Date:</label><br>
-                        <input type="date" id="checkOut" name="checkOut" required><br><br>
+                        <label for="checkOut">Check-out Date:</label>
+                        <input type="date" id="checkOut" name="checkOut" required>
                         
-                        <button type="submit">Submit</button>
+                        <button type="submit">Book Now</button>
                     </form>
-                </body>
+                    <div class="footer">
+                        &copy; 2025 Hotel Booking System. All rights reserved.
+                    </div>
+                </div>
+            </body>
             </html>
         `);
     } else if (req.method === 'POST') {
